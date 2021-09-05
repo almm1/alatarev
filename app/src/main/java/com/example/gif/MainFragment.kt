@@ -70,7 +70,7 @@ class MainFragment(private var mode: Int = -1) : Fragment() {
     }
     override fun onStart() {
         super.onStart()
-        presenter.setParam(imageViewHot,textViewHot,buttons,this)
+        presenter.setParam(imageViewHot,textViewHot,buttons,this, context)
         backButton.isEnabled=false
         button()
         presenter.show(gifs, cnt)

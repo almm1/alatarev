@@ -23,12 +23,20 @@ class MainPresenter {
     private lateinit var textView: TextView
     private lateinit var buttons: RelativeLayout
     private lateinit var view:Fragment
+    private var context: Context?=null
 
-    fun setParam( image: ImageView, textView: TextView, buttons: RelativeLayout, view:Fragment) {
+    fun setParam(
+        image: ImageView,
+        textView: TextView,
+        buttons: RelativeLayout,
+        view: Fragment,
+        context: Context?
+    ) {
         this.image=image
         this.textView=textView
         this.buttons=buttons
         this.view=view
+        this.context=context
     }
 
     fun GET(url:String, context: Context?): String {
@@ -105,25 +113,27 @@ class MainPresenter {
 
     @SuppressLint("CheckResult")
     fun show(gifs: ArrayList<Gifs>, cnt: Int) {
-        if (gifs.isNotEmpty()) {
-            Glide.with(view).
-            asGif().
-            load(toHttps(gifs[cnt].gifURL)).
-            placeholder(R.drawable.loading).
-            error(R.drawable.warning).
-            circleCrop().
-            into(image)
+        if (isInternetAvailable(context)) {
+            if (gifs.isNotEmpty()) {
+                Glide.with(view).asGif().load(toHttps(gifs[cnt].gifURL))
+                    .placeholder(R.drawable.loading).error(R.drawable.warning).circleCrop()
+                    .into(image)
 
-            textView.text=gifs[cnt].description
-            buttons.visibility= View.VISIBLE
+                textView.text = gifs[cnt].description
+                buttons.visibility = View.VISIBLE
+            } else {
+                showError()
+            }
         }
         else{
-            image.setImageResource(R.drawable.warning)
-            textView.setText(R.string.error)
-            buttons.visibility= View.GONE
+            showError()
         }
     }
-
+    private fun showError(){
+        image.setImageResource(R.drawable.warning)
+        textView.setText(R.string.error)
+        buttons.visibility = View.GONE
+    }
     private fun toHttps(http:String):String{
         if (http!=""){
             return if (http[4]!='s') {val tmp=http.substringAfter(":")
