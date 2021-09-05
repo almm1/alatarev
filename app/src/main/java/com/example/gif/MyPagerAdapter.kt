@@ -3,35 +3,27 @@ package com.example.gif
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import com.example.gif.fragments.HotFragment
-import com.example.gif.fragments.LatestFragment
-import com.example.gif.fragments.TopFragment
 
 class MyPagerAdapter(fm: FragmentManager) : FragmentPagerAdapter(fm) {
 
     override fun getItem(position: Int): Fragment {
         return when (position) {
-            0 -> {
-                TopFragment()
-            }
-            1 -> HotFragment()
-            else -> {
-                return LatestFragment()
-            }
+            0 -> MainFragment(0)
+            1 -> MainFragment(1)
+            2 -> MainFragment(2)
+            else -> return MainFragment(3)
         }
     }
-
     override fun getCount(): Int {
-        return 3
+        return 4
     }
 
     override fun getPageTitle(position: Int): CharSequence {
         return when (position) {
-            0 -> "Лучшие"
-            1 -> "Горячие"
-            else -> {
-                return "Последние"
+            0 -> "Последние"
+            1 -> "Лучшие"
+            2 -> "Горячие"
+            else -> return "Случайные"
         }
     }
-}
 }
